@@ -5,8 +5,10 @@ const Calculator = () => {
   const [secondNumber, setSecondNumber] = useState("");
   const [operator, setOperator] = useState("");
   const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const handleNumberClick = (number: number) => {
+    setError("");
     if (operator) {
       setSecondNumber(secondNumber + number.toString());
     } else {
@@ -15,6 +17,7 @@ const Calculator = () => {
   };
 
   const handleOperatorClick = (operator: string) => {
+    setError("");
     setOperator(operator);
   };
 
@@ -31,6 +34,10 @@ const Calculator = () => {
         result = Number(firstNumber) * Number(secondNumber);
         break;
       case "/":
+        if (secondNumber === "0") {
+          setError("Cannot divide by zero");
+          return;
+        }
         result = Number(firstNumber) / Number(secondNumber);
         break;
       default:
@@ -44,11 +51,15 @@ const Calculator = () => {
     setSecondNumber("");
     setOperator("");
     setResult("");
+    setError("");
   };
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4">
-      <div className="flex space-x-4">
+      <div className="w-full bg-gray-200 text-right p-4 rounded-lg text-2xl">
+        {error ? error : `${firstNumber} ${operator} ${secondNumber}`}
+      </div>
+      <div className="flex flex-wrap justify-center space-x-4 space-y-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             key={number}
